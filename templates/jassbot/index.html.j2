@@ -1,0 +1,55 @@
+
+{% extends "jassbot/layout.html.j2" %}
+
+{% block title %}
+    Jassbot
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+	<form id="searchinput" action="{{url_for('.search')}}" method="get">
+	    <div id="searchbox" class="hstack gap-3">
+		<a id="home" href="{{url_for('.index')}}">&lambda;</a>
+		<input class="form-control" id="search" autocomplete="off" name="query" type="text" placeholder="Search for..." />
+		<input class="btn btn-secondary" type="submit" value="Search"/> 
+	    </div>
+	</form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+	<div id="results">
+	    {% block results %}
+		<h1>Welcome to jassbot</h1>
+		<p class="lead">
+		    Jassbot is a JASS2 API search engine, which allows you to search
+		    the JASS2 standard API (common.j and Blizzard.j) by either name, or by
+		    approximate type signature.
+		</p>
+
+		<p id="example" class="bg-light">
+		    Example searches:
+		    <br/>
+		    <a href="{{ url_for('.search', query='TRVE')}}">TRVE</a>
+		    <br/>
+		    <a href="{{ url_for('.search', query='takes handle returns integer')}}">takes handle returns integer</a>
+		    <br/>
+		    <a href="{{ url_for('.search', query='Unit takes unit, integer integer real')}}">Unit takes unit, integer integer real</a>
+		    <br/>
+		    <a href="{{ url_for('.search', query='returns widget')}}">returns widget</a>
+		</p>
+
+		<p>
+		    This project is ofcourse heavily inspired by the great <a href="https://hoogle.haskell.org">Hoogle</a>.
+		    Its source code and data is free. You can find the command line interface for jassbot <a href="https://github.com/lep/jassbot">here</a>
+		    and the source for this webinterface <a href="https://github.com/lep/jassdoc-browser">here</a>.
+		    The data can be found <a href="https://github.com/lep/jassdoc">here</a>.
+		</p>
+	    {% endblock %}
+	</div>
+    </div>
+</div>
+{% endblock %}
+

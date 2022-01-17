@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+	<meta charset="utf-8" >
+	<meta name="viewport" content="width=device-width, initial-scale=1">    
+
+	<title>{% block title %} X {% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='jassbot/hl.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap.min.css')}}">
+	<link rel="icon" type="image/x-icon" href="{{url_for('static', filename='jassbot/favicon.png')}}">
+	<script>
+	    $SCRIPT_ROOT = "{{ url_for('.index') }}";
+	</script>
+	<script src="{{url_for('static', filename='jassbot/test.js')}}"></script>
+	<script src="{{url_for('static', filename='jassbot/preview.js')}}"></script>
+	{% block head %}{% endblock %}
+    </head>
+    <body>
+	<div id="main" class="container">
+	    {% if messages %}
+		<ul class="flashes">
+		    {% for message in messages %}
+			<li>{{message}}</li>
+		    {% endfor %}
+		</ul>
+	    {% endif %}
+
+	    {% block content %}{% endblock %}
+	</div>
+	<script type="text/javascript">
+	    hl()
+	    setup()
+	</script>
+    </body>
+</html>
