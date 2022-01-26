@@ -77,9 +77,9 @@ class Model:
 
 
 def getmodel():
-    if "db" not in g:
-        g.db = Model(sqlite3.connect(current_app.config["JASSDB"]))
-    return g.db
+    if "jass_db" not in g:
+        g.jass_db = Model(sqlite3.connect(current_app.config["JASSDB"]))
+    return g.jass_db
 
 def get_markdown_renderer():
     if "md" not in g:
