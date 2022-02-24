@@ -13,7 +13,7 @@ var tokens = [
 , [natives, "native"]
 , [bj_globals, "bjglobal"]
 , [cj_globals, "cjglobal"]
-, [/^(?:\/\/.+\n)/, "comment"]
+, [/^(?:\/\/.+(\n|$))/, "comment"]
 , [/^(?:0x[a-f0-9]+)/i, "number"]
 , [/^(?:\d+\.\d+)/, "number"]
 , [/^(?:\d+\.)/, "number"]
