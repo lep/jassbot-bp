@@ -26,5 +26,18 @@
 	    <dt>{{ annotation['name'] }}</dt>
 	    <dd>{{ annotation['html'] }}</dd>
 	{% endfor %}
+
+	<dt>wc3modding.com</dt>
+	<dd>
+	    {% if kind == 'global' %}
+		<a href="https://wc3modding.info/pages/jass-documentation-database/class/variables/query/{{entity}}/">{{entity}}</a>
+	    {% elif kind == 'native' %}
+		<a href="https://wc3modding.info/pages/jass-documentation-database/class/functions/query/{{entity}}/">{{entity}}</a>
+	    {% elif kind == 'function' %}
+		<a href="https://wc3modding.info/pages/jass-documentation-database/class/functions/query/{{entity}}/">{{entity}}</a>
+	    {% elif kind == 'type' %}
+		<a href="https://wc3modding.info/pages/jass-documentation-database/class/types/query/{{entity}}/">{{entity}}</a>
+	    {% endif %}
+	</dd>
     </dl>
 {% endblock %}

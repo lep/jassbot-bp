@@ -64,6 +64,17 @@ class Model:
         cur.close()
         return row[0]
 
+    def query_type(self, entity):
+        cur = self.db.cursor()
+        cur.execute("""
+            select value
+            from annotations
+            where fnname == ? and anname == 'type'
+        """, [entity])
+        row = cur.fetchone()
+        cur.close()
+        return row[0]
+
     def query_git_commit(self):
         cur = self.db.cursor()
         cur.execute("""
@@ -136,6 +147,7 @@ def doc(entity):
         param['html'] = md(param['doc'])
         parameters.append(param)
     linenumber = db.query_line_number(entity)
+    kind = db.query_type(entity)
 
     annotations = []
     for annotation in db.query_annotations(entity):
@@ -153,7 +165,5 @@ def doc(entity):
             annotations.append({"name": annotation['name'], "html": md(annotation['value'])})
         
 
-    return render_template('jassbot/doc.html.j2', entity=entity, parameters=parameters, annotations=annotations)
-
-
+    return render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
 
