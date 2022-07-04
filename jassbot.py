@@ -18,24 +18,24 @@ class Model:
     def query_function_parameters(self, fnname):
         cur = self.db.cursor()
         cur.execute("""
-			select Ty.param, Ty.value, Doc.value from
-			( select Value, param
-			  from Params_extra
-			  where Anname == 'param_order' AND fnname == :fnname
-			) as Ord
+            select Ty.param, Ty.value, Doc.value from
+            ( select Value, param
+              from Params_extra
+              where Anname == 'param_order' AND fnname == :fnname
+            ) as Ord
 
-			inner join
+            inner join
             ( select param, value
               from params_extra
               where anname == 'param_type' and fnname == :fnname
             ) as Ty on Ty.param == Ord.param
 
-			left outer join
+            left outer join
             ( select param, value from parameters
               where fnname == :fnname
             ) as Doc on Doc.param == Ord.param
 
-			order by Ord.value
+            order by Ord.value
         """, { "fnname": fnname })
         for name, ty, doc in cur:
             yield { "name": name, "type": ty, "doc": doc }
@@ -107,14 +107,14 @@ def md(txt):
 bp = Blueprint("jassbot", __name__, url_prefix="/jassbot")
 
 def query_jassbot(query):
-        s = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
-        s.connect("/tmp/jassbot-api.sock")
-        s.send( query.encode() )
-        chunks = []
-        while (chunk := s.recv(4096)) != b'':
-            chunks.append(chunk)
-        answer = b''.join(chunks).decode()
-        return json.loads(b''.join(chunks).decode())
+    s = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
+    s.connect("/tmp/jassbot-api.sock")
+    s.send( query.encode() )
+    chunks = []
+    while (chunk := s.recv(4096)) != b'':
+        chunks.append(chunk)
+    answer = b''.join(chunks).decode()
+    return json.loads(b''.join(chunks).decode())
 
 
 @bp.route("/")
