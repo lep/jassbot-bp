@@ -161,6 +161,8 @@ def doc(entity):
             annotations.append({"name": "Source code", "html": "<pre>%s</pre>" % annotation['value']})
         elif annotation['name'] == 'return-type':
             annotations.append({"name": "return type", "html": "<code>%s</code>" % annotation['value']})
+        elif annotation['name'] == 'commonai':
+            annotations.append({"name": "common.ai native", "html": "To use this native you have to declare it in your script."})
         else:
             annotations.append({"name": annotation['name'], "html": md(annotation['value'])})
         
