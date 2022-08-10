@@ -2,7 +2,7 @@
 
 import flask
 from flask import Blueprint
-from flask import current_app, g, request
+from flask import current_app, g, request, make_response
 from flask import render_template, redirect, url_for
 
 import sqlite3
@@ -113,8 +113,7 @@ def query_jassbot(query):
     chunks = []
     while (chunk := s.recv(4096)) != b'':
         chunks.append(chunk)
-    answer = b''.join(chunks).decode()
-    return json.loads(b''.join(chunks).decode())
+    return b''.join(chunks)
 
 
 @bp.route("/")
@@ -123,7 +122,7 @@ def index():
 
 @bp.route('/search/api/<query>')
 def search_api(query):
-    return flask.json.dumps(query_jassbot(query))
+    return (query_jassbot(query), { 'content-type': 'application/json' })
 
 
 @bp.route("/search")
@@ -169,3 +168,19 @@ def doc(entity):
 
     return render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
 
+@bp.route("/doc/api/<entity>")
+def doc_api(entity):
+    db = getmodel()
+
+    commit = db.query_git_commit()
+
+    parameters = list( db.query_function_parameters(entity) )
+    linenumber = db.query_line_number(entity)
+    kind = db.query_type(entity)
+    annotations = list( db.query_annotations(entity) )
+    return {'commit': commit,
+            'parameters': parameters,
+            'annotations': annotations,
+            'linenumber': linenumber,
+            'kind': kind
+            }
