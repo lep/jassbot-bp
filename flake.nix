@@ -23,7 +23,7 @@
 		};
 		mypython = pkgs.python3.withPackages(_: [ module ]);
 	    in {
-		packages.jassbot-bp = module;
+		packages.jassbot = module;
 		defaultPackage = module;
 		devShell = pkgs.mkShell {
 		    buildInputs = [
