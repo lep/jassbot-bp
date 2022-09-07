@@ -104,7 +104,7 @@ def md(txt):
         return ""
     return get_markdown_renderer().reset().convert(txt)
 
-bp = Blueprint("jassbot", __name__, url_prefix="/jassbot")
+bp = Blueprint("jassbot", __name__, url_prefix="/jassbot", template_folder="templates")
 
 def query_jassbot(query):
     s = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
