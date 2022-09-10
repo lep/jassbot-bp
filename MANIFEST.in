@@ -1,1 +1,2 @@
 graft jassbot/templates/jassbot
+graft jassbot/static/jassbot
