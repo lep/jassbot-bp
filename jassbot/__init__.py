@@ -94,7 +94,7 @@ def getmodel():
 
 def get_markdown_renderer():
     if "md" not in g:
-        g.md = markdown.Markdown(extensions=['tables'])
+        g.md = markdown.Markdown(extensions=['tables', 'fenced_code'])
     return g.md
 
 
@@ -157,7 +157,7 @@ def doc(entity):
         elif annotation['name'] == 'source-file':
             annotations.append({"name": "Source", "html": '<a href="https://github.com/lep/jassdoc/blob/%s/%s#L%s">%s</a>' % (commit, annotation['value'], linenumber, annotation['value']) })
         elif annotation['name'] == 'source-code':
-            annotations.append({"name": "Source code", "html": "<pre>%s</pre>" % annotation['value']})
+            annotations.append({"name": "Source code", "html": "<pre><code>%s</code></pre>" % annotation['value']})
         elif annotation['name'] == 'return-type':
             annotations.append({"name": "return type", "html": "<code>%s</code>" % annotation['value']})
         elif annotation['name'] == 'commonai':

@@ -14,7 +14,7 @@ function setup(){
             results.innerHTML = ""
             json.forEach(function(v){
                 var div = document.createElement("div")
-                var code = tokenize(v, "code")
+                var code = tokenize(v, "code", jass_tokens)
                 div.setAttribute("class", "result")
                 div.appendChild(code)
                 display.appendChild(div)
