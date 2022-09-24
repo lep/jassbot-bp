@@ -25,9 +25,21 @@
 		    ];
 		};
 		mypython = pkgs.python3.withPackages(_: [ module ]);
+		appWrapper = {
+		    type = "app";
+		    program = toString (pkgs.writeScript "run-jassbot" ''
+			export FLASK_JASSDB="${jassdoc.packages.${system}.jassdoc}/jass.db";
+			${mypython}/bin/python3 -m ${module.pname}
+		    '');
+		};
+
 	    in {
+		apps.jassbot = appWrapper;
+		apps.default = appWrapper;
+
 		packages.jassbot = module;
 		defaultPackage = module;
+
 		devShell = pkgs.mkShell {
 		    buildInputs = [
 			pkgs.python3
