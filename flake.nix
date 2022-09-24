@@ -2,9 +2,12 @@
     inputs = {
 	nixpkgs.url = "github:NixOS/nixpkgs";
 	flake-utils.url = "github:numtide/flake-utils";
+	jassdoc.url = "github:lep/jassdoc";
+	jassdoc.inputs.nixpkgs.follows = "nixpkgs";
+	jassdoc.inputs.flake-utils.follows = "flake-utils";
     };
 
-    outputs = { self, nixpkgs, flake-utils }:
+    outputs = { self, nixpkgs, flake-utils, jassdoc }:
 	flake-utils.lib.eachDefaultSystem (system:
 	    let pkgs = import nixpkgs { inherit system; };
 		py = pkgs.python3Packages;
@@ -30,6 +33,7 @@
 			pkgs.python3
 			module
 		    ];
+		    FLASK_JASSDB="${jassdoc.packages.${system}.jassdoc}/jass.db";
 		};
 	    }
 	);
