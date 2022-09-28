@@ -25,11 +25,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1663776625,
-        "narHash": "sha256-92hrFbHw3VG58xIYfisTWJYD7nfhj6RbhaPeDi4tFss=",
+        "lastModified": 1664380682,
+        "narHash": "sha256-xzTgCP8Ye7hm6iEd3jBoNJNj7yCOvbZc7VlMccX5/Qw=",
         "owner": "lep",
         "repo": "jassdoc",
-        "rev": "18210e3705a9528e05a007396e3e2cb36ceb0cec",
+        "rev": "f20b80264adb7779f7455ba2e5bce429032a26ca",
         "type": "github"
       },
       "original": {
