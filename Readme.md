@@ -44,4 +44,4 @@ work out of the box as that is provided by another service. Navigating to a
 specific doc page *should* still work but if you want to have the search running
 aswell you have to install the [jassbot](https://github.com/lep/jassbot) utility
 and run the web component like `cabal run web` or
-`nix run github:lep/jassbot web`.
+`nix run github:lep/jassbot#web`.
