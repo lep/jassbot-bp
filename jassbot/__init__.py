@@ -133,7 +133,12 @@ def search():
     else:
         return redirect(url_for('.index'))
 
-
+@bp.route("/opensearch.xml")
+def opensearch():
+    domain = request.url_root
+    return render_template('jassbot/opensearch.xml.j2', domain=domain), 200, {
+        'Content-Type': 'text/xml'
+    }
 
 @bp.route("/doc/<entity>")
 def doc(entity):
