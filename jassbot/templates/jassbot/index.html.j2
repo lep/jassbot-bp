@@ -11,7 +11,7 @@
 	<form id="searchinput" action="{{url_for('.search')}}" method="get">
 	    <div id="searchbox" class="hstack gap-3">
 		<a id="home" href="{{url_for('.index')}}">&lambda;</a>
-		<input class="form-control" id="search" autocomplete="off" name="query" type="text" placeholder="Search for..." />
+		<input class="form-control" id="search" autocomplete="off" name="query" type="text" placeholder="Search for..." value="{{ query }}" />
 		<input class="btn btn-secondary" type="submit" value="Search"/> 
 	    </div>
 	</form>

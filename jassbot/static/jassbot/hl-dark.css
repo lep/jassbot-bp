@@ -1,9 +1,29 @@
 .highlighted {
-    color: white;
+  color: white;
 }
 
 .keyword {
-    color: beige;
-    font-weight: bold;
+  color: gray;
+  font-weight: bold;
+}
+
+.ident {
+  color: white;
+}
+
+.string {
+  color: lightblue;
+}
+
+.rawcode {
+  color: lightblue;
+}
+
+.bool {
+  color: lightblue;
+}
+
+.null {
+  color: lightblue;
 }
 
