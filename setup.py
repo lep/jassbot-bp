@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(
-        name='jassbot blueprint',
+        name='jassbot-bp',
         version="1.0.0",
         packages=[
             'jassbot',
