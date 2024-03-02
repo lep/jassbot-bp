@@ -10,6 +10,7 @@ import markdown
 from functools import lru_cache
 import socket
 import json
+import requests
 
 class Model:
     def __init__(self, db):
@@ -107,14 +108,11 @@ def md(txt):
 bp = Blueprint("jassbot", __name__, url_prefix="/jassbot", template_folder="templates", static_folder="static")
 
 def query_jassbot(query):
-    s = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
-    s.connect("/tmp/jassbot-api.sock")
-    s.send( query.encode() )
-    chunks = []
-    while (chunk := s.recv(4096)) != b'':
-        chunks.append(chunk)
-    return b''.join(chunks)
-
+    r = requests.get(f"{current_app.config['JASSBOT_API']}?q={query}", stream=True)
+    def generator():
+        for x in r.iter_lines():
+            yield x
+    return generator()
 
 @bp.route("/")
 def index():
@@ -122,13 +120,13 @@ def index():
 
 @bp.route('/search/api/<query>')
 def search_api(query):
-    return (query_jassbot(query), { 'content-type': 'application/json' })
+    return query_jassbot(query), {"Content-Type": "application/json"}
 
 
 @bp.route("/search")
 def search():
     if query := request.args.get('query', ''):
-        results = json.loads( query_jassbot(query).decode() )
+        results = json.loads( b"".join( list(query_jassbot(query))) )
         return render_template('jassbot/search.html.j2', results=results, query=query)
     else:
         return redirect(url_for('.index'))
@@ -189,3 +187,9 @@ def doc_api(entity):
             'linenumber': linenumber,
             'kind': kind
             }
+
+def create_app():
+    app = flask.Flask(__name__)
+    app.config.from_prefixed_env()
+    app.register_blueprint(bp)
+    return app
