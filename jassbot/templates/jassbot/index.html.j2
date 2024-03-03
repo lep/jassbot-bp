@@ -23,6 +23,10 @@
 	<div id="results">
 	    {% block results %}
 		<h1>Welcome to jassbot</h1>
+    <p>
+      You are currently trying out a <span class="text-warning">beta version</span>.
+      If you have any feedback feel free to post it on <a href="https://github.com/lep/jassbot/pull/1">GitHub</a>.
+    </p>
 		<p class="lead">
 		    Jassbot is a JASS2 API search engine, which allows you to search
 		    the JASS2 standard API (common.j and Blizzard.j) by either name, or by
@@ -32,11 +36,13 @@
 		<p id="example" class="bg-light">
 		    Example searches:
 		    <br/>
-		    <a href="{{ url_for('.search', query='TRVE')}}">TRVE</a>
+		    <a href="{{ url_for('.search', query='extends widget')}}">extends widget</a>
+		    <br/>
+		    <a href="{{ url_for('.search', query='playercolor')}}">playercolor</a>
 		    <br/>
 		    <a href="{{ url_for('.search', query='takes handle returns integer')}}">takes handle returns integer</a>
 		    <br/>
-		    <a href="{{ url_for('.search', query='Unit takes unit, integer integer real')}}">Unit takes unit, integer integer real</a>
+		    <a href="{{ url_for('.search', query='Unit takes unit integer integer real')}}">Unit takes unit integer integer real</a>
 		    <br/>
 		    <a href="{{ url_for('.search', query='returns widget')}}">returns widget</a>
 		</p>
