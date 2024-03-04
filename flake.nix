@@ -1,53 +1,33 @@
 {
-    inputs = {
-	nixpkgs.url = "github:NixOS/nixpkgs";
-	flake-utils.url = "github:numtide/flake-utils";
-	jassdoc.url = "github:lep/jassdoc";
-	jassdoc.inputs.nixpkgs.follows = "nixpkgs";
-	jassdoc.inputs.flake-utils.follows = "flake-utils";
+  inputs = { systems.url = "github:nix-systems/default"; };
+
+  outputs = { self, nixpkgs, systems }:
+    let
+      eachSystem = nixpkgs.lib.genAttrs (import systems);
+      jassbot-bp = pkgs:
+        pkgs.python3Packages.buildPythonPackage {
+          pname = "jassbot";
+          version = "1.0.0";
+          src = self;
+          doCheck = false;
+
+          propagatedBuildInputs = [
+            pkgs.python3.pkgs.markdown
+            pkgs.python3.pkgs.flask
+            pkgs.python3.pkgs.requests
+          ];
+        };
+
+      devShell = pkgs: pkgs.mkShell { buildInputs = [ (jassbot-bp pkgs) ]; };
+    in {
+      packages = eachSystem (system: rec {
+        jassbot_bp = jassbot-bp (import nixpkgs { inherit system; });
+        default = jassbot_bp;
+      });
+
+      devShells = eachSystem
+        (system: { default = devShell (import nixpkgs { inherit system; }); });
+
     };
-
-    outputs = { self, nixpkgs, flake-utils, jassdoc }:
-	flake-utils.lib.eachDefaultSystem (system:
-	    let pkgs = import nixpkgs { inherit system; };
-		py = pkgs.python3Packages;
-
-		module = py.buildPythonPackage {
-		    pname = "jassbot";
-		    version = "1.0.0";
-		    src = self;
-
-		    doCheck = false;
-
-		    propagatedBuildInputs = [
-			py.markdown
-			py.flask
-		    ];
-		};
-		mypython = pkgs.python3.withPackages(_: [ module ]);
-		appWrapper = {
-		    type = "app";
-		    program = toString (pkgs.writeScript "run-jassbot" ''
-			export FLASK_JASSDB="${jassdoc.packages.${system}.jassdoc}/jass.db";
-			${mypython}/bin/python3 -m ${module.pname}
-		    '');
-		};
-
-	    in {
-		apps.jassbot = appWrapper;
-		apps.default = appWrapper;
-
-		packages.jassbot = module;
-		defaultPackage = module;
-
-		devShell = pkgs.mkShell {
-		    buildInputs = [
-			pkgs.python3
-			module
-		    ];
-		    FLASK_JASSDB="${jassdoc.packages.${system}.jassdoc}/jass.db";
-		};
-	    }
-	);
 }
 
