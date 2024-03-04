@@ -3,19 +3,19 @@
     <head>
 	<meta charset="utf-8" >
 	<meta name="viewport" content="width=device-width, initial-scale=1">    
-
 	<title>{% block title %} X {% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='jassbot/hl.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap.min.css')}}">
-	<link href="{{ url_for('static', filename='bootstrap-nightfall.min.css') }}" rel="stylesheet" media="(prefers-color-scheme: dark)">
-	<link href="{{ url_for('.static', filename='jassbot/hl-dark.css') }}" rel="stylesheet" media="(prefers-color-scheme: dark)">
-	<link rel="icon" type="image/x-icon" href="{{url_for('.static', filename='jassbot/favicon.png')}}">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='jassbot/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='jassbot/bootstrap-nightfall.min.css') }}" media="(prefers-color-scheme: dark)">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='jassbot/hl.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='jassbot/hl-dark.css') }}" media="(prefers-color-scheme: dark)">
 	<link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('.opensearch') }}" title="jassdoc" />
+	<link rel="icon" type="image/x-icon" href="{{ url_for('.static', filename='jassbot/favicon.png') }}">
 	<script>
 	    $SCRIPT_ROOT = "{{ url_for('.index') }}";
 	</script>
-	<script src="{{url_for('.static', filename='jassbot/test.js')}}"></script>
-	<script src="{{url_for('.static', filename='jassbot/preview.js')}}"></script>
+	<script src="{{ url_for('.static', filename='jassbot/test.js') }}"></script>
+	<script src="{{ url_for('.static', filename='jassbot/preview.js') }}"></script>
 	{% block head %}
 	{% endblock %}
     </head>
