@@ -4,7 +4,7 @@
   <Description>Search Jassdoc</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Image width="16" height="16" type="image/x-icon">{{domain}}{{ url_for('.static', filename="jassbot/favicon.png") }}</Image>
-  <Url type="text/html" method="get" template="{{domain}}{{ url_for('.search') }}?query={searchTerms}" />
-  <moz:SearchForm>{{domain}}{{ url_for('.search') }}</moz:SearchForm>
+  <Url type="text/html" method="get" template="{{ url_for('.search', _external=True) }}?query={searchTerms}" />
+  <moz:SearchForm>{{ url_for('.search', _external=True) }}</moz:SearchForm>
 </OpenSearchDescription>
 
