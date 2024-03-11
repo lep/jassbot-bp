@@ -1,0 +1,8 @@
+[project]
+name = "jassbot-bp"
+version = "2.0.0"
+dependencies = [
+    "flask",
+    "markdown",
+    "requests",
+]
