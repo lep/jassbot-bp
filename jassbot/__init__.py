@@ -126,8 +126,11 @@ def search_api(query):
 @bp.route("/search")
 def search():
     if query := request.args.get('query', ''):
-        results = json.loads( b"".join( list(query_jassbot(query))) )
-        return render_template('jassbot/search.html.j2', results=results, query=query)
+        res = json.loads( b"".join( list(query_jassbot(query))) )
+        return render_template('jassbot/search.html.j2',
+                               results=res['results'],
+                               queryParsed=res['queryParsed'],
+                               query=query)
     else:
         return redirect(url_for('.index'))
 

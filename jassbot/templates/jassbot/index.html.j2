@@ -20,7 +20,10 @@
 
 <div class="row">
     <div class="col">
-	<div id="results">
+	<div id="result">
+	    <div id="queryexplainer" class="small text-end text-secondary">
+	    </div>
+	    <div class="results">
 	    {% block results %}
 		<h1>Welcome to jassbot</h1>
     <p>
@@ -29,7 +32,7 @@
     </p>
 		<p class="lead">
 		    Jassbot is a JASS2 API search engine, which allows you to search
-		    the JASS2 standard API (common.j and Blizzard.j) by either name, or by
+		    the JASS2 standard API (common.j, Blizzard.j and common.ai) by either name, or by
 		    approximate type signature.
 		</p>
 
@@ -57,6 +60,7 @@
 
 		</p>
 	    {% endblock %}
+	    </div>
 	</div>
     </div>
 </div>
