@@ -193,6 +193,11 @@ def doc_api(entity):
             'kind': kind
             }
 
+@bp.errorhandler(404)
+@bp.errorhandler(Exception)
+def page_not_found(error):
+    return render_template('jassbot/404.html'), 404
+
 def create_app():
     app = flask.Flask(__name__)
     app.config.from_prefixed_env()

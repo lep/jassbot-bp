@@ -10,7 +10,7 @@
     <div class="col">
 	<form id="searchinput" action="{{url_for('.search')}}" method="get">
 	    <div id="searchbox" class="hstack gap-3">
-		<a id="home" href="{{url_for('.index')}}">&beta;</a>
+		<a id="home" href="{{url_for('.index')}}">&lambda;</a>
 		<input class="form-control" id="search" autocomplete="off" name="query" type="text" placeholder="Search for..." value="{{ query }}" />
 		<input class="btn btn-secondary" type="submit" value="Search"/> 
 	    </div>
@@ -26,10 +26,6 @@
 	    <div class="results">
 	    {% block results %}
 		<h1>Welcome to jassbot</h1>
-    <p>
-      You are currently trying out a <span class="text-warning">beta version</span>.
-      If you have any feedback feel free to post it on <a href="https://github.com/lep/jassbot/pull/1">GitHub</a>.
-    </p>
 		<p class="lead">
 		    Jassbot is a JASS2 API search engine, which allows you to search
 		    the JASS2 standard API (common.j, Blizzard.j and common.ai) by either name, or by
@@ -51,7 +47,7 @@
 		</p>
 
 		<p>
-		    This project is ofcourse heavily inspired by the great <a href="https://hoogle.haskell.org">Hoogle</a>.
+		    This project is of course heavily inspired by the great <a href="https://hoogle.haskell.org">Hoogle</a>.
 		    Its source code and data is free. You can find the command line interface for jassbot <a href="https://github.com/lep/jassbot">here</a>
 		    and the data can be found <a href="https://github.com/lep/jassdoc">here</a>.
 		    The source of this webinterface can be found <a href="https://github.com/lep/jassbot-bp">here</a>.
