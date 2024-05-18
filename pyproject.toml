@@ -1,6 +1,6 @@
 [project]
 name = "jassbot-bp"
-version = "2.0.4"
+version = "2.0.5"
 dependencies = [
     "flask",
     "markdown",

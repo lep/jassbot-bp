@@ -48,7 +48,9 @@ class Model:
             select anname, value
             from annotations
             where fnname == ? and anname not in ('type', 'start-line', 'end-line')
-            order by anname
+            -- we rely on sqlite here to get the annotations in order as they
+            -- are in the docstring, because we insert them in that order.
+            order by rowid
         """, (entity, ))
         for name, value in cur:
             yield { "name": name, "value": value }
