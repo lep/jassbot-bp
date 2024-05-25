@@ -6,56 +6,59 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+
+<header class="navbar navbar-expand-lg bd-navbar sticky-top">
     <div class="col">
 	<form id="searchinput" action="{{url_for('.search')}}" method="get">
 	    <div id="searchbox" class="hstack gap-3">
-		<a id="home" href="{{url_for('.index')}}">&lambda;</a>
+		<a class="ms-3" id="home" href="{{url_for('.index')}}">&lambda;</a>
 		<input class="form-control" id="search" autocomplete="off" name="query" type="text" placeholder="Search for..." value="{{ query }}" />
 		<input class="btn btn-secondary" type="submit" value="Search"/> 
 	    </div>
 	</form>
     </div>
-</div>
+</header>
 
-<div class="row">
-    <div class="col">
-	<div id="result">
-	    <div id="queryexplainer" class="small text-end text-secondary">
-	    </div>
-	    <div class="results">
-	    {% block results %}
-		<h1>Welcome to jassbot</h1>
-		<p class="lead">
-		    Jassbot is a JASS2 API search engine, which allows you to search
-		    the JASS2 standard API (common.j, Blizzard.j and common.ai) by either name, or by
-		    approximate type signature.
-		</p>
+<div id="main" class="container">
+    <div class="row">
+	<div class="col">
+	    <div id="result">
+		<div id="queryexplainer" class="small text-end text-secondary">
+		</div>
+		<div class="results">
+		{% block results %}
+		    <h1>Welcome to jassbot</h1>
+		    <p class="lead">
+			Jassbot is a JASS2 API search engine, which allows you to search
+			the JASS2 standard API (common.j, Blizzard.j and common.ai) by either name, or by
+			approximate type signature.
+		    </p>
 
-		<p id="example" class="bg-light">
-		    Example searches:
-		    <br/>
-		    <a href="{{ url_for('.search', query='extends widget')}}">extends widget</a>
-		    <br/>
-		    <a href="{{ url_for('.search', query='playercolor')}}">playercolor</a>
-		    <br/>
-		    <a href="{{ url_for('.search', query='takes handle returns integer')}}">takes handle returns integer</a>
-		    <br/>
-		    <a href="{{ url_for('.search', query='Unit takes unit integer integer real')}}">Unit takes unit integer integer real</a>
-		    <br/>
-		    <a href="{{ url_for('.search', query='returns widget')}}">returns widget</a>
-		</p>
+		    <p id="example" class="bg-light">
+			Example searches:
+			<br/>
+			<a href="{{ url_for('.search', query='extends widget')}}">extends widget</a>
+			<br/>
+			<a href="{{ url_for('.search', query='playercolor')}}">playercolor</a>
+			<br/>
+			<a href="{{ url_for('.search', query='takes handle returns integer')}}">takes handle returns integer</a>
+			<br/>
+			<a href="{{ url_for('.search', query='Unit takes unit integer integer real')}}">Unit takes unit integer integer real</a>
+			<br/>
+			<a href="{{ url_for('.search', query='returns widget')}}">returns widget</a>
+		    </p>
 
-		<p>
-		    This project is of course heavily inspired by the great <a href="https://hoogle.haskell.org">Hoogle</a>.
-		    Its source code and data is free. You can find the command line interface for jassbot <a href="https://github.com/lep/jassbot">here</a>
-		    and the data can be found <a href="https://github.com/lep/jassdoc">here</a>.
-		    The source of this webinterface can be found <a href="https://github.com/lep/jassbot-bp">here</a>.
-		    You can join the <a href="https://matrix.to/#/!qppIznMkBZgRaYJNYA:matrix.org?via=matrix.org">wurst matrix room</a>
-		    if you want to have a chat or use the bridged <a href="https://wurstlang.org">wurst</a> discord.
+		    <p>
+			This project is of course heavily inspired by the great <a href="https://hoogle.haskell.org">Hoogle</a>.
+			Its source code and data is free. You can find the command line interface for jassbot <a href="https://github.com/lep/jassbot">here</a>
+			and the data can be found <a href="https://github.com/lep/jassdoc">here</a>.
+			The source of this webinterface can be found <a href="https://github.com/lep/jassbot-bp">here</a>.
+			You can join the <a href="https://matrix.to/#/!qppIznMkBZgRaYJNYA:matrix.org?via=matrix.org">wurst matrix room</a>
+			if you want to have a chat or use the bridged <a href="https://wurstlang.org">wurst</a> discord.
 
-		</p>
-	    {% endblock %}
+		    </p>
+		{% endblock %}
+		</div>
 	    </div>
 	</div>
     </div>
