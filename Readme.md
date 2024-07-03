@@ -1,5 +1,5 @@
 This is the flask [blueprint](https://flask.palletsprojects.com/en/2.2.x/blueprints/)
-which serves the jassbot [web interface](https://lep.duckdns.org/app/jassbot).
+which serves the jassbot [web interface](https://lep.duckdns.org/jassbot).
 
 # Installation
 
