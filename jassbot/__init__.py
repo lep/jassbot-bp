@@ -97,7 +97,7 @@ def getmodel():
 
 def get_markdown_renderer():
     if "md" not in g:
-        g.md = markdown.Markdown(extensions=['tables', 'fenced_code'])
+        g.md = markdown.Markdown(extensions=['tables', 'fenced_code', 'attr_list'])
     return g.md
 
 
