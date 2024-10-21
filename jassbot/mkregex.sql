@@ -1,4 +1,3 @@
-
 select "var bj_globals = /^(?:" || group_concat(fnname, "|") || ")\b/"
 from annotations
 where anname == 'type' and value == 'global' and fnname like "bj_%";
