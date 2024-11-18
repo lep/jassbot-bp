@@ -120,6 +120,10 @@ def query_jassbot(query):
 def index():
     return render_template("jassbot/index.html.j2")
 
+@bp.route("/doc/")
+def empty_doc():
+    return redirect(url_for('.index'))
+
 @bp.route('/search/api/<query>')
 def search_api(query):
     return query_jassbot(query), {"Content-Type": "application/json"}
