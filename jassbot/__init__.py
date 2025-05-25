@@ -92,7 +92,7 @@ class Model:
 
 def getmodel():
     if "jass_db" not in g:
-        g.jass_db = Model(sqlite3.connect(current_app.config["JASSDB"]))
+        g.jass_db = Model(sqlite3.connect(current_app.config["JASSBOT"]["DB"]))
     return g.jass_db
 
 def get_markdown_renderer():
@@ -107,8 +107,6 @@ def md(txt):
         return ""
     return get_markdown_renderer().reset().convert(txt)
 
-bp = Blueprint("jassbot", __name__, url_prefix="/jassbot", template_folder="templates", static_folder="static")
-
 def query_jassbot(query):
     r = requests.get(f"{current_app.config['JASSBOT_API']}?q={query}", stream=True)
     def generator():
@@ -116,96 +114,102 @@ def query_jassbot(query):
             yield x
     return generator()
 
-@bp.route("/")
-def index():
-    return render_template("jassbot/index.html.j2")
+def mk_bp(*args, **kwargs):
+    bp = Blueprint("jassbot", __name__, template_folder="templates", static_folder="static", **kwargs)
 
-@bp.route("/doc/")
-def empty_doc():
-    return redirect(url_for('.index'))
+    @bp.route("/")
+    def index():
+        return render_template("jassbot/index.html.j2")
 
-@bp.route('/search/api/<query>')
-def search_api(query):
-    return query_jassbot(query), {"Content-Type": "application/json"}
-
-
-@bp.route("/search")
-def search():
-    if query := request.args.get('query', ''):
-        res = json.loads( b"".join( list(query_jassbot(query))) )
-        return render_template('jassbot/search.html.j2',
-                               results=res['results'],
-                               queryParsed=res['queryParsed'],
-                               query=query)
-    else:
+    @bp.route("/doc/")
+    def empty_doc():
         return redirect(url_for('.index'))
 
-@bp.route("/opensearch.xml")
-def opensearch():
-    domain = request.url_root
-    return render_template('jassbot/opensearch.xml.j2', domain=domain), 200, {
-        'Content-Type': 'text/xml'
-    }
+    @bp.route('/search/api/<query>')
+    def search_api(query):
+        return query_jassbot(query), {"Content-Type": "application/json"}
 
-@bp.route("/doc/<entity>")
-def doc(entity):
-    db = getmodel()
 
-    commit = db.query_git_commit()
-
-    parameters = []
-    for param in db.query_function_parameters(entity):
-        param['html'] = md(param['doc'])
-        parameters.append(param)
-    linenumber = db.query_line_number(entity)
-    kind = db.query_type(entity)
-
-    annotations = []
-    for annotation in db.query_annotations(entity):
-        if annotation['name'] == 'async':
-            annotations.append({"name": "async", "html": "This function is asynchronous. The values it returns are not guaranteed to be the same for each player. If you attempt to use it in an synchronous manner it may cause a desync."})
-        elif annotation['name'] == 'pure':
-            annotations.append({"name": "pure", "html": "This function is pure. For the same values passed to it, it will always return the same value."})
-        elif annotation['name'] == 'source-file':
-            annotations.append({"name": "Source", "html": '<a href="https://github.com/lep/jassdoc/blob/%s/%s#L%s">%s</a>' % (commit, annotation['value'], linenumber, annotation['value']) })
-        elif annotation['name'] == 'source-code':
-            annotations.append({"name": "Source code", "html": "<pre><code>%s</code></pre>" % annotation['value']})
-        elif annotation['name'] == 'return-type':
-            annotations.append({"name": "return type", "html": "<code>%s</code>" % annotation['value']})
-        elif annotation['name'] == 'commonai':
-            annotations.append({"name": "common.ai native", "html": "To use this native you have to declare it in your script."})
-        elif annotation['name'] == 'event':
-            annotations.append({"name": "event", "html": f"<code>{annotation['value']}</code>"})
+    @bp.route("/search")
+    def search():
+        if query := request.args.get('query', ''):
+            res = json.loads( b"".join( list(query_jassbot(query))) )
+            return render_template('jassbot/search.html.j2',
+                                   results=res['results'],
+                                   queryParsed=res['queryParsed'],
+                                   query=query)
         else:
-            annotations.append({"name": annotation['name'], "html": md(annotation['value'])})
+            return redirect(url_for('.index'))
+
+    @bp.route("/opensearch.xml")
+    def opensearch():
+        domain = request.url_root
+        return render_template('jassbot/opensearch.xml.j2', domain=domain), 200, {
+            'Content-Type': 'text/xml'
+        }
+
+    @bp.route("/doc/<entity>")
+    def doc(entity):
+        db = getmodel()
+
+        commit = db.query_git_commit()
+
+        parameters = []
+        for param in db.query_function_parameters(entity):
+            param['html'] = md(param['doc'])
+            parameters.append(param)
+        linenumber = db.query_line_number(entity)
+        kind = db.query_type(entity)
+
+        annotations = []
+        for annotation in db.query_annotations(entity):
+            if annotation['name'] == 'async':
+                annotations.append({"name": "async", "html": "This function is asynchronous. The values it returns are not guaranteed to be the same for each player. If you attempt to use it in an synchronous manner it may cause a desync."})
+            elif annotation['name'] == 'pure':
+                annotations.append({"name": "pure", "html": "This function is pure. For the same values passed to it, it will always return the same value."})
+            elif annotation['name'] == 'source-file':
+                annotations.append({"name": "Source", "html": '<a href="https://github.com/lep/jassdoc/blob/%s/%s#L%s">%s</a>' % (commit, annotation['value'], linenumber, annotation['value']) })
+            elif annotation['name'] == 'source-code':
+                annotations.append({"name": "Source code", "html": "<pre><code>%s</code></pre>" % annotation['value']})
+            elif annotation['name'] == 'return-type':
+                annotations.append({"name": "return type", "html": "<code>%s</code>" % annotation['value']})
+            elif annotation['name'] == 'commonai':
+                annotations.append({"name": "common.ai native", "html": "To use this native you have to declare it in your script."})
+            elif annotation['name'] == 'event':
+                annotations.append({"name": "event", "html": f"<code>{annotation['value']}</code>"})
+            else:
+                annotations.append({"name": annotation['name'], "html": md(annotation['value'])})
         
 
-    return render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
+        return render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
 
-@bp.route("/doc/api/<entity>")
-def doc_api(entity):
-    db = getmodel()
+    @bp.route("/doc/api/<entity>")
+    def doc_api(entity):
+        db = getmodel()
 
-    commit = db.query_git_commit()
+        commit = db.query_git_commit()
 
-    parameters = list( db.query_function_parameters(entity) )
-    linenumber = db.query_line_number(entity)
-    kind = db.query_type(entity)
-    annotations = list( db.query_annotations(entity) )
-    return {'commit': commit,
-            'parameters': parameters,
-            'annotations': annotations,
-            'linenumber': linenumber,
-            'kind': kind
-            }
+        parameters = list( db.query_function_parameters(entity) )
+        linenumber = db.query_line_number(entity)
+        kind = db.query_type(entity)
+        annotations = list( db.query_annotations(entity) )
+        return {'commit': commit,
+                'parameters': parameters,
+                'annotations': annotations,
+                'linenumber': linenumber,
+                'kind': kind
+                }
 
-@bp.errorhandler(404)
-@bp.errorhandler(Exception)
-def page_not_found(error):
-    return render_template('jassbot/404.html'), 404
+    @bp.errorhandler(404)
+    @bp.errorhandler(Exception)
+    def page_not_found(error):
+        return render_template('jassbot/404.html.j2'), 404
 
-def create_app():
+
+    return bp
+
+def create_app(*args, **kwargs):
     app = flask.Flask(__name__)
     app.config.from_prefixed_env()
-    app.register_blueprint(bp)
+    app.register_blueprint(mk_bp(*args, **kwargs))
     return app
