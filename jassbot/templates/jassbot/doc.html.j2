@@ -1,30 +1,29 @@
 {% extends "jassbot/index.html.j2" %}
-
-{% block title %}
-    Doc - {{entity}}
-{% endblock %}
-
+{% block title %}Doc - {{ entity }}{% endblock %}
 {% block results %}
-    <h1>{{entity}}</h1>
+    <h1>{{ entity }}</h1>
     <dl>
-	{% if parameters %}
-	    <dt>Parameters</dt>
-	    <dd>
-	    <table class="table">
-		{% for parameter in parameters %}
-		    <tr>
-			<td>{{ parameter['name'] }}</td>
-			<td><code>{{ parameter['type'] }}</code></td>
-			<td>{{ parameter['html'] }}</td>
-		    </tr>
-		{% endfor %}
-	    </table>
-	    </dd>
-	{% endif %}
-
-	{% for annotation in annotations %}
-	    <dt>{{ annotation['name'] }}</dt>
-	    <dd>{{ annotation['html'] }}</dd>
-	{% endfor %}
+        {% if parameters %}
+            <dt>Parameters</dt>
+            <dd>
+                <table class="table">
+                    {% for parameter in parameters %}
+                        <tr>
+                            <td>{{ parameter['name'] }}</td>
+                            <td>
+                                <code>{{ parameter['type'] }}</code>
+                            </td>
+                            <td>{{ parameter['html'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </dd>
+        {% endif %}
+        {% for annotation in annotations %}
+            <dt>{{ annotation['name'] }}</dt>
+            <dd>
+                {{ annotation['html'] }}
+            </dd>
+        {% endfor %}
     </dl>
 {% endblock %}

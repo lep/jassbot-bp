@@ -1,11 +1,9 @@
 {% extends "jassbot/index.html.j2" %}
-
-{% block title %}
-    Search - {{ query }}
-{% endblock %}
-
+{% block title %}Search - {{ query }}{% endblock %}
 {% block results %}
     {% for result in results %}
-        <div class="result"><code>{{ result }}</code></div>
+        <div class="result">
+            <code>{{ result }}</code>
+        </div>
     {% endfor %}
 {% endblock %}
