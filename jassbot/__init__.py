@@ -108,7 +108,7 @@ def md(txt):
     return get_markdown_renderer().reset().convert(txt)
 
 def query_jassbot(query):
-    r = requests.get(f"{current_app.config['JASSBOT_API']}?q={query}", stream=True)
+    r = requests.get(f"{current_app.config['JASSBOT']['API']}?q={query}", stream=True)
     def generator():
         for x in r.iter_lines():
             yield x
