@@ -14,6 +14,9 @@
           src = self;
           doCheck = false;
 
+          pyproject = true;
+          build-system = [ pkgs.python3.pkgs.setuptools ];
+
           propagatedBuildInputs = [
             pkgs.python3.pkgs.markdown
             pkgs.python3.pkgs.flask
