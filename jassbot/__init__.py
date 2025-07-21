@@ -228,6 +228,10 @@ def mk_bp(*args, **kwargs):
     def syntax_regexps():
         db = getmodel()
         commit = db.query_git_commit()
+        # We have to use a "weak" etag here, because the spec says if the
+        # response is changed - like for example by gzipping it - it has to be
+        # changed. Since we let nginx gzip our responses we have to use a weak
+        # etag, otherwise it would always be served fresh.
         etag = f'W/"{commit}"'
         nonlocal regexp_cache_value
         nonlocal regexp_cache_key
