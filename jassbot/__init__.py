@@ -12,6 +12,8 @@ import socket
 import json
 import requests
 
+from jassbot.trie import Trie
+
 class Model:
     def __init__(self, db):
         self.db = db
@@ -89,16 +91,68 @@ class Model:
         cur.close()
         return row[0]
 
+    def query_bj_globals(self):
+        cur = self.db.cursor()
+        cur.execute("""
+            SELECT fnname
+            FROM annotations
+            WHERE anname == 'type'
+                AND value =='global'
+                AND fnname LIKE 'bj_%'
+        """)
+        return list(x[0] for x in cur.fetchall())
+
+    def query_cj_globals(self):
+        cur = self.db.cursor()
+        cur.execute("""
+            SELECT fnname
+            FROM annotations
+            WHERE anname == 'type'
+                AND value =='global'
+                AND fnname NOT LIKE 'bj_%'
+        """)
+        return list(x[0] for x in cur.fetchall())
+
+    def query_natives(self):
+        cur = self.db.cursor()
+        cur.execute("""
+            SELECT fnname
+            FROM annotations
+            WHERE anname == 'type'
+                AND value =='native'
+        """)
+        return list(x[0] for x in cur.fetchall())
+
+    def query_functions(self):
+        cur = self.db.cursor()
+        cur.execute("""
+            SELECT fnname
+            FROM annotations
+            WHERE anname == 'type'
+                AND value =='function'
+        """)
+        return list(x[0] for x in cur.fetchall())
+
+    def query_types(self):
+        cur = self.db.cursor()
+        cur.execute("""
+            SELECT fnname
+            FROM annotations
+            WHERE anname == 'type'
+                AND value =='type'
+        """)
+        return list(x[0] for x in cur.fetchall())
+
 
 def getmodel():
-    if "jass_db" not in g:
-        g.jass_db = Model(sqlite3.connect(current_app.config["JASSBOT"]["DB"]))
-    return g.jass_db
+    if "jassbot_db" not in g:
+        g.jassbot_db = Model(sqlite3.connect(current_app.config["JASSBOT"]["DB"]))
+    return g.jassbot_db
 
 def get_markdown_renderer():
-    if "md" not in g:
-        g.md = markdown.Markdown(extensions=['tables', 'fenced_code', 'attr_list'])
-    return g.md
+    if "jassbot_markdown_render" not in g:
+        g.jassbot_markdown_render = markdown.Markdown(extensions=['tables', 'fenced_code', 'attr_list'])
+    return g.jassbot_markdown_render
 
 
 @lru_cache
@@ -106,6 +160,26 @@ def md(txt):
     if not txt:
         return ""
     return get_markdown_renderer().reset().convert(txt)
+
+def mk_syntax_regexps(db):
+    def mk(ls):
+        plain = "/^(?:" + "|".join(ls) + ")\\b/"
+        t = Trie()
+        for l in ls:
+            t.insert(l)
+        fancy = "/^" + t.toRegexp() + "\\b/"
+        if len(fancy) < len(plain):
+            return fancy
+        else:
+            return plain
+
+    return "\n".join([
+        "const bj_globals = " + mk(db.query_bj_globals()),
+        "const cj_globals = " + mk(db.query_cj_globals()),
+        "const natives = " + mk(db.query_natives()),
+        "const functions = " + mk(db.query_functions()),
+        "const types = " + mk(db.query_types()),
+    ])
 
 def query_jassbot(query):
     r = requests.get(f"{current_app.config['JASSBOT']['API']}?q={query}", stream=True)
@@ -146,6 +220,28 @@ def mk_bp(*args, **kwargs):
         domain = request.url_root
         return render_template('jassbot/opensearch.xml.j2', domain=domain), 200, {
             'Content-Type': 'text/xml'
+        }
+
+    regexp_cache_key = None
+    regexp_cache_value = None
+    @bp.route("/syntax.js")
+    def syntax_regexps():
+        db = getmodel()
+        commit = db.query_git_commit()
+        etag = f'"{commit}"'
+        nonlocal regexp_cache_value
+        nonlocal regexp_cache_key
+
+        if regexp_cache_value is None or regexp_cache_key != commit:
+            regexp_cache_key = commit
+            regexp_cache_value = mk_syntax_regexps(db)
+
+        if request.headers.get("If-None-Match") == etag:
+            return "", 304
+
+        return regexp_cache_value, 200, {
+            'Content-Type': 'text/javascript',
+            'ETag': etag,
         }
 
     @bp.route("/doc/<entity>")

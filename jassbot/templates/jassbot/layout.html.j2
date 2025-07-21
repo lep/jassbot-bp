@@ -28,6 +28,7 @@
               type="image/x-icon"
               href="{{ url_for('.static', filename='jassbot/favicon.png') }}">
         <script>$SCRIPT_ROOT = "{{ url_for('.index') }}";</script>
+        <script src="{{ url_for('.syntax_regexps') }}"></script>
         <script src="{{ url_for('.static', filename='jassbot/test.js') }}"></script>
         <script src="{{ url_for('.static', filename='jassbot/preview.js') }}"></script>
         {% block head %}{% endblock %}
