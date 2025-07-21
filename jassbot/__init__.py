@@ -228,7 +228,7 @@ def mk_bp(*args, **kwargs):
     def syntax_regexps():
         db = getmodel()
         commit = db.query_git_commit()
-        etag = f'"{commit}"'
+        etag = f'W/"{commit}"'
         nonlocal regexp_cache_value
         nonlocal regexp_cache_key
 
