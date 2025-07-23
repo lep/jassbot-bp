@@ -11,6 +11,7 @@ from functools import lru_cache
 import socket
 import json
 import requests
+from urllib.parse import urlencode
 
 from jassbot.trie import Trie
 
@@ -268,7 +269,17 @@ def mk_bp(*args, **kwargs):
             elif annotation['name'] == 'pure':
                 annotations.append({"name": "pure", "html": "This function is pure. For the same values passed to it, it will always return the same value."})
             elif annotation['name'] == 'source-file':
-                annotations.append({"name": "Source", "html": '<a href="https://github.com/lep/jassdoc/blob/%s/%s#L%s">%s</a>' % (commit, annotation['value'], linenumber, annotation['value']) })
+                fileName = annotation['value']
+                permalink = 'https://github.com/lep/jassdoc/blob/%s/%s#L%s' % (commit, fileName, linenumber)
+                sourceFileLinkHtml = '<a href="%s">%s</a>' % (permalink, fileName)
+                # New issue link accepts either body or permalink, not both. Maybe aliases of one another.
+                newIssueLinkEncoded = 'https://github.com/lep/jassdoc/issues/new?' + 
+                    urlencode({"title": "[web] %s: %s - " % (fileName, entity),
+                              "body": permalink + "\n\nPlease change to a good descriptive title and tell us what should be improved.",
+                              })
+                editLink = 'https://github.com/lep/jassdoc/edit/master/%s#L%s' % (fileName, linenumber)
+                discussHtml = '(<a href="%s">suggest an edit</a> or <a href="%s">discuss on Github</a>)' % (editLink, newIssueLinkEncoded)
+                annotations.append({"name": "Source", "html": sourceFileLinkHtml + " " + discussHtml})
             elif annotation['name'] == 'source-code':
                 annotations.append({"name": "Source code", "html": "<pre><code>%s</code></pre>" % annotation['value']})
             elif annotation['name'] == 'return-type':
