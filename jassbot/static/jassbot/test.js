@@ -90,11 +90,13 @@ function hl(){
     var i
     pres = Array.from(document.querySelectorAll("code"))
     for(i = 0; i != pres.length; i++){
-	if( pres[i].classList.contains("language-lua") || pres[i].classList.contains("lua") )
-	    pres[i].replaceWith(tokenize(pres[i].innerText, "code", lua_tokens))
-	else
-	    pres[i].replaceWith(tokenize(pres[i].innerText, "code", jass_tokens))
-
+        if( ! pres[i].classList.contains("sourceCode")){ // pandoc hl
+            if( pres[i].classList.contains("language-lua") || pres[i].classList.contains("lua") ){
+                pres[i].replaceWith(tokenize(pres[i].innerText, "code", lua_tokens))
+            }else{
+                pres[i].replaceWith(tokenize(pres[i].innerText, "code", jass_tokens))
+            }
+        }
     }
 }
 
