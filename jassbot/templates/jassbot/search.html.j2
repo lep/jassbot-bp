@@ -1,5 +1,14 @@
 {% extends "jassbot/index.html.j2" %}
+
+{% block head %}
+    <script>
+        const state = { json: {results: {{results}}}, value: "{{query}}" }
+        window.history.replaceState(state, "")
+    </script>
+{% endblock %}
+
 {% block title %}Search - {{ query }}{% endblock %}
+
 {% block results %}
     {% for result in results %}
         <div class="result">
