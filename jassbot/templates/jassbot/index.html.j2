@@ -1,4 +1,10 @@
 {% extends "jassbot/layout.html.j2" %}
+{% block head %}
+    <script>
+        const state = { json: {results: []}, value: "" };
+        window.history.replaceState(state, "");
+    </script>
+{% endblock %}
 {% block title %}Jassbot{% endblock %}
 {% block content %}
     <header class="navbar navbar-expand-lg bd-navbar sticky-top">

@@ -33,14 +33,7 @@ function setup(){
     let pushstate_timer = null
     let typing_timer = null
 
-    const populate_search_results = (ev) => {
-        let value = ""
-        let json = { results: [] }
-        if( ev ){
-            json = ev.json
-            value = ev.value
-        }
-        searchbar.value = value
+    const populate_search_results = (json) => {
         results.innerHTML = ""
         json.results.forEach(function(v){
             const div = document.createElement("div")
@@ -67,7 +60,7 @@ function setup(){
 
         const state = { json, value }
         pushstate_timer = setTimeout(() => window.history.pushState(state, "", url), 200)
-        populate_search_results(state)
+        populate_search_results(json)
     }
 
     searchbar.addEventListener('keyup', () => {
@@ -76,5 +69,14 @@ function setup(){
         typing_timer = setTimeout(after_timeout, 150)
     })
 
-    addEventListener("popstate", (event) => populate_search_results(event.state))
+    addEventListener("popstate", (ev) => {
+        let value = ""
+        let json = { results: [] }
+        if( ev ){
+            json = ev.state.json
+            value = ev.state.value
+        }
+        populate_search_results(json)
+        searchbar.value = value
+    })
 }
