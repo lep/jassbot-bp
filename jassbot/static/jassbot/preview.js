@@ -3,6 +3,7 @@ function setup(){
     const display = document.getElementById("result")
     const results = display.querySelector('.results')
     const queryExplainer = document.getElementById('queryexplainer')
+    const mainContent = document.getElementById("jassbot-main-content")
 
     const explain_tag = {
         EmptyQuery(x) {
@@ -34,6 +35,7 @@ function setup(){
     let typing_timer = null
 
     const populate_search_results = (json) => {
+        mainContent.style.visibility = "hidden";
         results.innerHTML = ""
         json.results.forEach(function(v){
             const div = document.createElement("div")
@@ -70,13 +72,12 @@ function setup(){
     })
 
     addEventListener("popstate", (ev) => {
-        let value = ""
-        let json = { results: [] }
-        if( ev ){
-            json = ev.state.json
-            value = ev.state.value
+        if( ev.state === null ){
+            results.innerHTML = ""
+            mainContent.style.visibility = "visible";
+        }else{
+            searchbar.value = ev.state.value
+            populate_search_results(ev.state.json)
         }
-        populate_search_results(json)
-        searchbar.value = value
     })
 }
