@@ -1,8 +1,8 @@
 function setup(){
-    const bar = document.getElementById("search")
+    const searchbar = document.getElementById("search")
     const display = document.getElementById("result")
     const results = display.querySelector('.results')
-    const queryExplainer = display.querySelector('#queryexplainer')
+    const queryExplainer = document.getElementById('queryexplainer')
 
     const explain_tag = {
         EmptyQuery(x) {
@@ -28,54 +28,53 @@ function setup(){
         }
     }
 
-    function explain_query(ast) {
-        const tag = ast.tag
-        return explain_tag[tag](ast)
-    }
+    const explain_query = (ast) => explain_tag[ast.tag](ast)
 
-    function after_timeout(){
-        var value = bar.value
-        if(! value)
-            return
-        
-        window.history.replaceState(null, "", $SCRIPT_ROOT+"search?query="+value)
+    let pushstate_timer = null
+    let typing_timer = null
 
-        var on_load = function(){
-            var json = JSON.parse(this.responseText)
-
-            queryExplainer.innerHTML = ""
-            // explain_query(json.queryParsed, queryExplainer)
-            queryExplainer.textContent = explain_query(json.queryParsed)
-
-
-
-            results.innerHTML = ""
-            json.results.forEach(function(v){
-                var div = document.createElement("div")
-                var code = tokenize(v, "code", jass_tokens)
-                div.setAttribute("class", "result")
-                div.appendChild(code)
-                results.appendChild(div)
-            })
+    const populate_search_results = (ev) => {
+        let value = ""
+        let json = { results: [] }
+        if( ev ){
+            json = ev.json
+            value = ev.value
         }
-
-
-        var req = new XMLHttpRequest()
-        req.addEventListener("load", on_load)
-        req.open("GET", $SCRIPT_ROOT+"search/api/"+value)
-        req.send()
+        searchbar.value = value
+        results.innerHTML = ""
+        json.results.forEach(function(v){
+            const div = document.createElement("div")
+            const code = tokenize(v, "code", jass_tokens)
+            div.setAttribute("class", "result")
+            div.appendChild(code)
+            results.appendChild(div)
+        })
     }
 
-    var timer = false
-    function search_onkeydown(){
-        if(timer){
-            clearTimeout(timer)
-        }
-        timer = setTimeout(after_timeout, 100)
+    const after_timeout = async () => {
+        const value = searchbar.value
+        if(! value) return
 
+        const url = new URL($SCRIPT_ROOT+"search", window.location.origin)
+        url.searchParams.set("query", value)
+
+        if( pushstate_timer ) clearTimeout(pushstate_timer)
+
+        const response = await fetch(new URL("search/api/"+value, url))
+        const json = await response.json()
+        queryExplainer.innerHTML = ""
+        queryExplainer.textContent = explain_query(json.queryParsed)
+
+        const state = { json, value }
+        pushstate_timer = setTimeout(() => window.history.pushState(state, "", url), 200)
+        populate_search_results(state)
     }
 
-    bar.addEventListener('keyup', search_onkeydown)
+    searchbar.addEventListener('keyup', () => {
+        if( typing_timer ) clearTimeout(typing_timer)
+        if( pushstate_timer ) clearTimeout(pushstate_timer)
+        typing_timer = setTimeout(after_timeout, 150)
+    })
 
-
+    addEventListener("popstate", (event) => populate_search_results(event.state))
 }
