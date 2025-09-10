@@ -3,12 +3,20 @@
 }
 
 .keyword {
-  color: gray;
+  color: rgb(170, 170, 170);
   font-weight: bold;
 }
 
 .ident {
-  color: white;
+  color: rgb(230,230,230);
+}
+
+.native a {
+  color: rgb(180,32,180);
+}
+
+.number {
+  color: rgb(51, 51, 240);
 }
 
 .string {
@@ -26,4 +34,3 @@
 .null {
   color: lightblue;
 }
-
