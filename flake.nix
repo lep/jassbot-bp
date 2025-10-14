@@ -18,13 +18,12 @@
             pkgs.minify
             pkgs.closurecompiler
             pkgs.moreutils
-            pkgs.python3Packages.htmlmin
           ];
 
           postUnpack = ''
             minify --recursive -o source/jassbot/static/ source/jassbot/static/jassbot
             for template in source/jassbot/templates/jassbot/*.html.j2; do
-              htmlmin --remove-comments --remove-empty-space "$template" "$template"
+              minify --type handlebars  -o "$template" "$template"
             done
 
             for js in source/jassbot/static/jassbot/*.js; do
