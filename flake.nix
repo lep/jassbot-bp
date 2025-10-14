@@ -22,9 +22,7 @@
 
           postUnpack = ''
             minify --recursive -o source/jassbot/static/ source/jassbot/static/jassbot
-            for template in source/jassbot/templates/jassbot/*.html.j2; do
-              minify --type handlebars  -o "$template" "$template"
-            done
+            minify --recursive --type mustache -o source/jassbot/templates/ source/jassbot/templates/jassbot
 
             for js in source/jassbot/static/jassbot/*.js; do
               closure-compiler --js "$js" | sponge "$js"
