@@ -67,16 +67,15 @@ function mkdom(txt, type){
 }
 
 function tokenize(txt, type, tokens){
-    var i = 0;
-    var match;
+    var i = 0
     var res = []
-    var dom;
     var span = document.createElement(type)
     span.setAttribute("class", "highlighted")
     while(txt){
         for(i = 0; i != tokens.length; i++){
-            if(match = txt.match(tokens[i][0])){
-                dom = mkdom(match[0], tokens[i][1])
+            const match = txt.match(tokens[i][0])
+            if(match){
+                const dom = mkdom(match[0], tokens[i][1])
                 span.appendChild(dom)
                 txt = txt.slice(match[0].length)
                 break
@@ -87,17 +86,13 @@ function tokenize(txt, type, tokens){
 }
 
 function hl(){
-    var i
-    pres = Array.from(document.querySelectorAll("code"))
-    for(i = 0; i != pres.length; i++){
-        if( ! pres[i].classList.contains("sourceCode")){ // pandoc hl
-            if( pres[i].classList.contains("language-lua") || pres[i].classList.contains("lua") ){
-                pres[i].replaceWith(tokenize(pres[i].innerText, "code", lua_tokens))
+    document.querySelectorAll("code").forEach(pre => {
+        if( ! pre.classList.contains("sourceCode")){ // pandoc hl
+            if( pre.classList.contains("language-lua") || pre.classList.contains("lua") ){
+                pre.replaceWith(tokenize(pre.innerText, "code", lua_tokens))
             }else{
-                pres[i].replaceWith(tokenize(pres[i].innerText, "code", jass_tokens))
+                pre.replaceWith(tokenize(pre.innerText, "code", jass_tokens))
             }
         }
-    }
+    })
 }
-
-
