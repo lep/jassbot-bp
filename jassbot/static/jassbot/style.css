@@ -1,0 +1,89 @@
+html {
+    color-scheme: light dark;
+    --highlighted: light-dark(black, white);
+    --keyword: light-dark(black, #aaaaaa);
+    --number: light-dark(#3333ff, #5555f0);
+    --string: light-dark(blue, lightblue);
+    --rawcode: light-dark(blue, lightblue);
+    --bool: light-dark(blue, lightblue);
+    --null: light-dark(blue, light-blue);
+    --native: light-dark(purple, #b420b4);
+
+    --comment: green;
+    --type: #47a;
+    --like-type: #47a;
+    --bj: #d44;
+    --bj-global: #47a;
+    --cj-global: #47a;
+    --operator: sienna;
+}
+
+.highlighted {
+    color: var(--highlighted);
+}
+
+.comment {
+    color: var(--comment);
+}
+
+.keyword {
+    color: var(--keyword);
+    font-weight: bold;
+}
+
+.number {
+    color: var(--number);
+}
+
+.string {
+    color: var(--string);
+}
+
+.rawcode {
+    color: var(--rawcode);
+}
+
+.bool {
+    color: var(--bool);
+}
+
+.null {
+    color: var(--null);
+}
+
+.type a {
+    color: var(--type);
+    font-weight: bold;
+    style: none;
+}
+
+.like-type {
+    color: var(--like-type);
+    font-weight: bold;
+}
+
+.native a {
+    style: none;
+    color: var(--native);
+}
+
+.bj a {
+    style: none;
+    color: var(--bj);
+}
+
+.bjglobal a {
+    style: none;
+    color: var(--bj-global);
+}
+
+.cjglobal a {
+    style: none;
+    color: var(--cj-global);
+}
+
+
+.operator {
+    color: var(--operator);
+}
+
