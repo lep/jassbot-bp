@@ -6,7 +6,7 @@ html {
     --string: light-dark(blue, lightblue);
     --rawcode: light-dark(blue, lightblue);
     --bool: light-dark(blue, lightblue);
-    --null: light-dark(blue, light-blue);
+    --null: light-dark(blue, lightblue);
     --native: light-dark(purple, #b420b4);
 
     --comment: green;
