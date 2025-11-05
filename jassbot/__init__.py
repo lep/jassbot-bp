@@ -182,6 +182,10 @@ def mk_syntax_regexps(db):
         "const types = " + mk(db.query_types()),
     ])
 
+@lru_cache(maxsize=2)
+def cached_syntax_regexps(_commit):
+    return mk_syntax_regexps(getmodel())
+
 def query_jassbot(query):
     r = requests.get(f"{current_app.config['JASSBOT']['API']}?q={query}", stream=True)
     def generator():
@@ -223,30 +227,18 @@ def mk_bp(*args, **kwargs):
             'Content-Type': 'text/xml'
         }
 
-    regexp_cache_key = None
-    regexp_cache_value = None
     @bp.route("/syntax.js")
     def syntax_regexps():
         db = getmodel()
         commit = db.query_git_commit()
+
         # We have to use a "weak" etag here, because the spec says if the
         # response is changed - like for example by gzipping it - it has to be
         # changed. Since we let nginx gzip our responses we have to use a weak
         # etag, otherwise it would always be served fresh.
-        etag = f'W/"{commit}"'
-        nonlocal regexp_cache_value
-        nonlocal regexp_cache_key
-
-        if regexp_cache_value is None or regexp_cache_key != commit:
-            regexp_cache_key = commit
-            regexp_cache_value = mk_syntax_regexps(db)
-
-        if request.headers.get("If-None-Match") == etag:
-            return "", 304
-
-        return regexp_cache_value, 200, {
+        return cached_syntax_regexps(commit), 200, {
             'Content-Type': 'text/javascript',
-            'ETag': etag,
+            'ETag': f'W/"{commit}"',
         }
 
     @bp.route("/doc/<entity>")
@@ -292,7 +284,9 @@ def mk_bp(*args, **kwargs):
                 annotations.append({"name": annotation['name'], "html": md(annotation['value'])})
         
 
-        return render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
+        response = render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
+        etag = f'W/"{commit}"'
+        return response, 200, { 'ETag': etag }
 
     @bp.route("/doc/api/<entity>")
     def doc_api(entity):
