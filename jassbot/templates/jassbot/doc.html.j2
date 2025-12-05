@@ -25,5 +25,14 @@
                 {{ annotation['html'] }}
             </dd>
         {% endfor %}
+        {% if kind == "type" %}
+            <dt>Search for functions</dt>
+            <dd>
+                <ul>
+                    <li><a href="{{ url_for('.search', query="takes "+entity ) }}">taking {{entity}}</a></li>
+                    <li><a href="{{ url_for('.search', query="returns "+entity ) }}">returning {{entity}}</a></li>
+                </ul>
+            </dd>
+        {% endif %}
     </dl>
 {% endblock %}
