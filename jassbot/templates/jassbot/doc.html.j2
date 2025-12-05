@@ -26,11 +26,12 @@
             </dd>
         {% endfor %}
         {% if kind == "type" %}
-            <dt>Search for functions</dt>
+            <dt>Search for</dt>
             <dd>
                 <ul>
-                    <li><a href="{{ url_for('.search', query="takes "+entity ) }}">taking {{entity}}</a></li>
-                    <li><a href="{{ url_for('.search', query="returns "+entity ) }}">returning {{entity}}</a></li>
+                    <li><a href="{{ url_for('.search', query="takes "+entity ) }}">stuff taking {{entity}}</a></li>
+                    <li><a href="{{ url_for('.search', query="returns "+entity ) }}">stuff returning {{entity}}</a></li>
+                    <li><a href="{{ url_for('.search', query="extends "+entity ) }}">stuff extending {{entity}}</a></li>
                 </ul>
             </dd>
         {% endif %}
