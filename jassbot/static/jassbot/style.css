@@ -87,17 +87,15 @@ html {
     color: var(--operator);
 }
 
-a#home {
-    width: 1em;
-    height: 1em;
+span#home {
+    display: inline-block;
 }
 
 .birthday {
     width: 1em;
     height: 1em;
-    position: relative;
-    top: -29px;
-    left: -7px;
+    position: absolute;
+    top: 7px;
+    left: 7px;
     transform: rotate(-20deg);
-    display: block;
 }
