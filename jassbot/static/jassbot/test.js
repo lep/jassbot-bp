@@ -67,12 +67,11 @@ function mkdom(txt, type){
 }
 
 function tokenize(txt, type, tokens){
-    var i = 0
-    var res = []
-    var span = document.createElement(type)
+    let res = []
+    let span = document.createElement(type)
     span.setAttribute("class", "highlighted")
     while(txt){
-        for(i = 0; i != tokens.length; i++){
+        for(let i = 0; i != tokens.length; i++){
             const match = txt.match(tokens[i][0])
             if(match){
                 const dom = mkdom(match[0], tokens[i][1])
@@ -89,9 +88,9 @@ function hl(){
     document.querySelectorAll("code").forEach(pre => {
         if( ! pre.classList.contains("sourceCode")){ // pandoc hl
             if( pre.classList.contains("language-lua") || pre.classList.contains("lua") ){
-                pre.replaceWith(tokenize(pre.innerText, "code", lua_tokens))
+                pre.replaceWith(tokenize(pre.textContent, "code", lua_tokens))
             }else{
-                pre.replaceWith(tokenize(pre.innerText, "code", jass_tokens))
+                pre.replaceWith(tokenize(pre.textContent, "code", jass_tokens))
             }
         }
     })
