@@ -117,6 +117,7 @@ def mk_bp(*args, **kwargs):
         return cached_syntax_regexps(commit), 200, {
             'Content-Type': 'text/javascript',
             'ETag': f'W/"{commit}"',
+            'Cache-Control': 'public, max-age=604800, s-maxage=604800',
         }
 
     @bp.route("/doc/<entity>")
@@ -164,7 +165,7 @@ def mk_bp(*args, **kwargs):
 
         response = render_template('jassbot/doc.html.j2', kind=kind, entity=entity, parameters=parameters, annotations=annotations)
         etag = f'W/"{commit}"'
-        return response, 200, { 'ETag': etag }
+        return response, 200, { 'ETag': etag, 'Cache-Control': 'public, max-age=604800, s-maxage=604800' }
 
     @bp.route("/doc/api/<entity>")
     def doc_api(entity):
