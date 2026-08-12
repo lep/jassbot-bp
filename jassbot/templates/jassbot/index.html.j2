@@ -8,7 +8,10 @@
                     <span id="home">
                         <a class="ms-3" id="home" href="{{ url_for(".index") }}">&lambda;
                             {%- if birthday -%}
-                                <img class="birthday" src="{{ url_for('.static', filename='jassbot/hat-birthday-svgrepo-com.png')}}" alt="party hat" title="today is jassdocs {{birthday}} birthday!" >
+                                <img class="birthday"
+                                     src="{{ url_for('.static', filename='jassbot/hat-birthday-svgrepo-com.png') }}"
+                                     alt="party hat"
+                                     title="today is jassdocs {{ birthday }} birthday!">
                             {%- endif -%}
                         </a>
                     </span>
