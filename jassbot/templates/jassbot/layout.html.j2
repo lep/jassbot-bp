@@ -11,10 +11,6 @@
               href="{{ url_for('.static', filename='jassbot/bootstrap.min.css') }}">
         <link rel="stylesheet"
               type="text/css"
-              href="{{ url_for('.static', filename='jassbot/bootstrap-nightfall.min.css') }}"
-              media="(prefers-color-scheme: dark)">
-        <link rel="stylesheet"
-              type="text/css"
               href="{{ url_for('.static', filename='jassbot/style.css') }}">
         <link rel="search"
               type="application/opensearchdescription+xml"
@@ -32,6 +28,12 @@
     <body>
         {% block content %}{% endblock %}
         <script type="text/javascript">
+        const mq = window.matchMedia('(prefers-color-scheme: dark)')
+        const changeTheme = () => {
+            document.documentElement.setAttribute('data-bs-theme', mq.matches ? 'dark' : 'light')
+        }
+        mq.addEventListener('change', changeTheme)
+        changeTheme()
 	    hl()
 	    setup()
         </script>
