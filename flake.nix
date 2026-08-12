@@ -9,10 +9,11 @@
       eachSystem = nixpkgs.lib.genAttrs (import systems);
       jassbot-bp = pkgs:
         pkgs.python3Packages.buildPythonPackage {
-          pname = "jassbot";
-          version = "1.0.0";
+          pname = "jassbot-bp";
+          version = "2.1.9";
           src = self;
           doCheck = false;
+          dontCheckPythonMetadata = true;
 
           nativeBuildInputs = [
             pkgs.minify
