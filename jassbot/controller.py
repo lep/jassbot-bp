@@ -1,6 +1,5 @@
 import datetime
 import json
-import socket
 import sqlite3
 from functools import lru_cache
 from urllib.parse import urlencode
@@ -12,7 +11,6 @@ from flask import (
     Blueprint,
     current_app,
     g,
-    make_response,
     redirect,
     render_template,
     request,
@@ -67,8 +65,7 @@ def cached_syntax_regexps(_commit):
 def query_jassbot(query):
     r = requests.get(f"{current_app.config['JASSBOT']['API']}?q={query}", stream=True)
     def generator():
-        for x in r.iter_lines():
-            yield x
+        yield from r.iter_lines()
     return generator()
 
 def mk_bp(*args, **kwargs):

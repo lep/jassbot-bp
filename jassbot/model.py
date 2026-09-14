@@ -84,7 +84,7 @@ class Model:
                 AND value =='global'
                 AND fnname LIKE 'bj_%'
         """)
-        return list(x[0] for x in cur.fetchall())
+        return [x[0] for x in cur.fetchall()]
 
     def query_cj_globals(self):
         cur = self.db.cursor()
@@ -95,7 +95,7 @@ class Model:
                 AND value =='global'
                 AND fnname NOT LIKE 'bj_%'
         """)
-        return list(x[0] for x in cur.fetchall())
+        return [x[0] for x in cur.fetchall()]
 
     def query_natives(self):
         cur = self.db.cursor()
@@ -105,7 +105,7 @@ class Model:
             WHERE anname == 'type'
                 AND value =='native'
         """)
-        return list(x[0] for x in cur.fetchall())
+        return [x[0] for x in cur.fetchall()]
 
     def query_functions(self):
         cur = self.db.cursor()
@@ -115,7 +115,7 @@ class Model:
             WHERE anname == 'type'
                 AND value =='function'
         """)
-        return list(x[0] for x in cur.fetchall())
+        return [x[0] for x in cur.fetchall()]
 
     def query_types(self):
         cur = self.db.cursor()
@@ -125,5 +125,5 @@ class Model:
             WHERE anname == 'type'
                 AND value =='type'
         """)
-        return list(x[0] for x in cur.fetchall())
+        return [x[0] for x in cur.fetchall()]
 
