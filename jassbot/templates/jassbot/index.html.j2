@@ -21,7 +21,7 @@
                            name="query"
                            type="search"
                            placeholder="Search for..."
-                           value="{{ query }}" />
+                           value="{{ query|forceescape }}" />
                     <input class="btn btn-secondary me-3" type="submit" value="Search" />
                 </div>
             </form>
